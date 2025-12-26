@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <!-- Content Security Policy -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; 
@@ -24,6 +24,7 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .scrollbar-hide::-webkit-scrollbar {
@@ -48,11 +49,17 @@
     .animate-spin {
       animation: spin 1s linear infinite;
     }
+
+    /* Mobile optimization for touch targets */
+    button,
+    input {
+      touch-action: manipulation;
+    }
   </style>
 </head>
 
 <body class="bg-gray-50 text-gray-900 h-screen overflow-hidden">
-  <div id="app" class="h-full flex flex-col items-center justify-start pt-4 md:pt-8 pb-4 px-2 md:px-0"></div>
+  <div id="app" class="h-full flex flex-col items-center justify-start pt-safe pb-safe px-4 md:px-0"></div>
 
   <script>
     // =========================
@@ -73,7 +80,8 @@
       transcription: null,
       isProcessing: false,
       error: null,
-      showKeyInput: false
+      showKeyInput: false,   // Header dropdown toggle
+      isEnteringKey: false   // Center card toggle
     };
 
     const app = document.getElementById('app');
@@ -187,8 +195,9 @@ Output ONLY a JSON array of objects like:
     // RENDER
     // =========================
     function render() {
+      // Main Layout responsive adjustments
       app.innerHTML = `
-        <div class="flex flex-col h-full w-full max-w-4xl bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
+        <div class="flex flex-col h-full w-full max-w-4xl bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100 md:my-8 my-2">
           ${renderHeader()}
           <main class="flex-1 overflow-hidden relative flex flex-col bg-slate-50">
             ${renderMainContent()}
@@ -200,22 +209,22 @@ Output ONLY a JSON array of objects like:
 
     function renderHeader() {
       const keyStatus = state.apiKey ?
-        '<span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>Key Saved' :
-        '<span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>No Key';
+        '<span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span><span class="hidden sm:inline">Key Saved</span>' :
+        '<span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span><span class="hidden sm:inline">No Key</span>';
 
       const keyInputClass = state.showKeyInput ? 'block' : 'hidden';
 
       return `
-        <header class="bg-indigo-600 text-white p-6 shadow-md z-10 flex-shrink-0 relative">
+        <header class="bg-indigo-600 text-white p-4 md:p-6 shadow-md z-10 flex-shrink-0 relative">
           <div class="flex items-center justify-between">
-            <div>
-              <h1 class="text-2xl font-bold tracking-tight">AI Audio To Text Converter</h1>
-              <p class="text-indigo-100 text-sm mt-1">Fast & Accurate With Your Own Key</p>
+            <div class="flex-1 min-w-0 pr-4">
+              <h1 class="text-xl md:text-2xl font-bold tracking-tight truncate">AI Audio To Text</h1>
+              <p class="text-indigo-100 text-xs md:text-sm mt-1 truncate">Fast & Accurate Transcription</p>
             </div>
             
-            <!-- API Key Controls -->
-            <div class="relative">
-              <button id="btn-toggle-key" class="flex items-center bg-indigo-700 hover:bg-indigo-800 text-xs font-mono py-1.5 px-3 rounded border border-indigo-500 transition">
+            <!-- API Key Controls (Top Right) -->
+            <div class="relative flex-shrink-0">
+              <button id="btn-toggle-key" class="flex items-center bg-indigo-700 hover:bg-indigo-800 text-xs font-mono py-2 px-3 rounded border border-indigo-500 transition shadow-sm">
                 ${keyStatus}
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -223,19 +232,17 @@ Output ONLY a JSON array of objects like:
                 </svg>
               </button>
 
-              <!-- Key Input Dropdown -->
+              <!-- Header Dropdown (for changing key later) -->
               <div id="key-dropdown" class="${keyInputClass} absolute right-0 top-full mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-50 text-gray-800">
                  <label class="block text-xs font-semibold text-gray-500 mb-1">GOOGLE GEMINI API KEY</label>
-                 <input type="password" id="input-api-key" value="${escapeHtml(state.apiKey)}" 
+                 <input type="password" id="input-api-key-header" value="${escapeHtml(state.apiKey)}" 
                         placeholder="AIzaSy..." 
-                        class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none mb-2 font-mono">
-                 <button id="btn-save-key" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-1.5 rounded transition">
-                   Save Key Locally
+                        class="w-full border border-gray-300 rounded p-2 text-base md:text-sm focus:ring-2 focus:ring-indigo-500 outline-none mb-2 font-mono">
+                 <button id="btn-save-key-header" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-2 rounded transition">
+                   Update Key
                  </button>
-                 <p class="text-[10px] text-gray-400 mt-2 text-center">Stored in your browser's LocalStorage</p>
               </div>
             </div>
-
           </div>
         </header>
       `;
@@ -253,7 +260,7 @@ Output ONLY a JSON array of objects like:
             </div>
             <h3 class="text-lg font-medium text-gray-900">Error</h3>
             <p class="text-gray-500 mt-2 max-w-lg whitespace-pre-wrap">${escapeHtml(state.error)}</p>
-            <button id="btn-reset" class="mt-6 px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition">Back to Home</button>
+            <button id="btn-reset" class="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700 transition font-medium">Back to Home</button>
           </div>
         `;
       }
@@ -266,7 +273,7 @@ Output ONLY a JSON array of objects like:
               <div class="absolute inset-0 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
             </div>
             <h3 class="text-xl font-semibold text-gray-800">Processing Audio...</h3>
-            <p class="text-gray-500 mt-2 max-w-xs">AI is listening, analyzing, and transcribing...</p>
+            <p class="text-gray-500 mt-2 max-w-xs">AI is analyzing and transcribing...</p>
           </div>
         `;
       }
@@ -277,37 +284,60 @@ Output ONLY a JSON array of objects like:
     }
 
     function renderUpload() {
-      // If no key is set, show a prompt in the middle instead of upload
+      // SCENARIO 1: No API Key - Setup Mode
       if (!state.apiKey) {
-        return `
-          <div class="flex flex-col items-center justify-center h-full p-6">
-             <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-8 max-w-md text-center">
-               <div class="w-12 h-12 bg-white text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 border border-indigo-100 shadow-sm">
-                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11.536 11l-4.47 4.47 1.414 1.414L12 16l4-4 4 4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        const centerContent = state.isEnteringKey ?
+          // Mode: Entering Key (Input Field)
+          `<div class="animate-pulse-once">
+              <label class="block text-left text-xs font-semibold text-indigo-700 mb-1 ml-1 uppercase tracking-wider">Paste your Gemini API Key</label>
+              <div class="relative">
+                <input type="password" id="input-api-key-center" 
+                  class="w-full border-2 border-indigo-200 rounded-xl p-3 text-base focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none font-mono text-gray-800 shadow-inner mb-3 transition-all"
+                  placeholder="AIzaSy... (Paste here)">
+              </div>
+              <button id="btn-save-key-center" class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-medium py-3 px-6 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+                <span>Save & Continue</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+              </button>
+              <button id="btn-cancel-key" class="mt-3 text-gray-400 text-sm hover:text-gray-600 underline">Cancel</button>
+           </div>`
+          :
+          // Mode: Initial Setup Call-to-Action
+          `<div>
+              <div class="w-16 h-16 bg-white text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 border border-indigo-100 shadow-sm">
+                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11.536 11l-4.47 4.47 1.414 1.414L12 16l4-4 4 4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                  </svg>
                </div>
-               <h3 class="text-lg font-bold text-gray-900 mb-2">Setup Required</h3>
-               <p class="text-gray-600 text-sm mb-6">To use this free tool, you need to provide your own Google Gemini API Key. It's safe and stored locally on your device.</p>
-               <button id="btn-setup-key" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition shadow-md">
+               <h3 class="text-xl font-bold text-gray-900 mb-2">Setup Required</h3>
+               <p class="text-gray-600 text-sm mb-6 max-w-xs mx-auto">To use this free tool, you need your own Google Gemini API Key. It's stored securely on your device.</p>
+               <button id="btn-setup-key" class="bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-lg font-medium py-3 px-8 rounded-xl transition shadow-md w-full sm:w-auto">
                  Enter API Key
                </button>
+           </div>`;
+
+        return `
+          <div class="flex flex-col items-center justify-center h-full p-4 md:p-6 bg-slate-50">
+             <div class="bg-indigo-50 border border-indigo-200 rounded-3xl p-6 md:p-10 w-full max-w-sm text-center shadow-lg transition-all duration-300">
+               ${centerContent}
              </div>
           </div>
         `;
       }
 
+      // SCENARIO 2: Ready to Upload
       return `
-        <div class="flex flex-col items-center justify-center h-full p-6 transition-all duration-300">
-          <div id="drop-zone" class="w-full max-w-lg h-64 border-2 border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200 group hover:border-indigo-400 hover:bg-gray-50">
-            <div class="p-4 bg-indigo-100 text-indigo-600 rounded-full mb-4 group-hover:scale-110 transition-transform pointer-events-none">
+        <div class="flex flex-col items-center justify-center h-full p-4 md:p-6 transition-all duration-300">
+          <div id="drop-zone" class="w-full max-w-lg h-60 md:h-72 border-2 border-dashed border-gray-300 rounded-3xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200 group hover:border-indigo-400 hover:bg-white active:bg-gray-100 bg-gray-50/50">
+            <div class="p-4 bg-indigo-100 text-indigo-600 rounded-full mb-4 group-hover:scale-110 transition-transform pointer-events-none shadow-sm">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
               </svg>
             </div>
             <h3 class="text-lg font-semibold text-gray-700 pointer-events-none">Upload Audio</h3>
             <p class="text-gray-500 mt-2 text-sm text-center px-8 pointer-events-none">
-              Drag & drop MP3, WAV, M4A or click to browse
+              Tap to browse or drag file<br>
+              <span class="text-xs text-indigo-400 mt-1 block">MP3, M4A, WAV supported</span>
             </p>
             <input id="file-input" type="file" class="hidden" accept="audio/*,video/*">
           </div>
@@ -319,22 +349,22 @@ Output ONLY a JSON array of objects like:
       const size = (state.file.size / (1024 * 1024)).toFixed(2);
       return `
         <div class="flex flex-col items-center justify-center h-full p-6 space-y-6">
-          <div class="w-full max-w-md bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
-            <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
-               <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div class="w-full max-w-md bg-white p-6 rounded-2xl shadow-md border border-gray-200 flex items-center gap-4">
+            <div class="w-14 h-14 bg-green-100 text-green-600 rounded-xl flex items-center justify-center flex-shrink-0">
+               <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                </svg>
             </div>
             <div class="flex-1 min-w-0">
-              <h4 class="text-sm font-medium text-gray-900 truncate">${escapeHtml(state.file.name)}</h4>
-              <p class="text-xs text-gray-500">${size} MB</p>
+              <h4 class="text-base font-semibold text-gray-900 truncate">${escapeHtml(state.file.name)}</h4>
+              <p class="text-sm text-gray-500">${size} MB</p>
             </div>
-            <button id="btn-remove" class="text-gray-400 hover:text-red-500 p-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" /></svg>
+            <button id="btn-remove" class="text-gray-400 hover:text-red-500 p-3 hover:bg-red-50 rounded-lg transition">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
           </div>
 
-          <button id="btn-start" class="w-full max-w-md bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+          <button id="btn-start" class="w-full max-w-md bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-lg font-medium py-4 px-6 rounded-2xl shadow-xl transition flex items-center justify-center gap-2">
             START TRANSCRIPTION
           </button>
         </div>
@@ -391,7 +421,7 @@ Output ONLY a JSON array of objects like:
               </div>
             </div>
             ${segments}
-            <div class="flex justify-center pt-8 pb-4">
+            <div class="flex justify-center pt-8 pb-10">
               <span class="text-xs text-gray-400 uppercase tracking-widest border-t border-gray-200 pt-4 px-4">End of Session</span>
             </div>
           </div>
@@ -403,7 +433,8 @@ Output ONLY a JSON array of objects like:
     // EVENTS
     // =========================
     function attachEventListeners() {
-      // 1. Key Management Events
+      // 1. Key Management 
+      // Toggle header dropdown
       const btnToggleKey = document.getElementById('btn-toggle-key');
       if (btnToggleKey) {
         btnToggleKey.addEventListener('click', (e) => {
@@ -413,25 +444,50 @@ Output ONLY a JSON array of objects like:
         });
       }
 
+      // CENTER CARD: Click "Enter API Key" -> Show Input
       const btnSetupKey = document.getElementById('btn-setup-key');
       if (btnSetupKey) {
         btnSetupKey.addEventListener('click', () => {
-          state.showKeyInput = true;
+          state.isEnteringKey = true;
           render();
-          // Focus input after render
-          setTimeout(() => document.getElementById('input-api-key')?.focus(), 50);
+          setTimeout(() => document.getElementById('input-api-key-center')?.focus(), 50);
         });
       }
 
-      const btnSaveKey = document.getElementById('btn-save-key');
-      if (btnSaveKey) {
-        btnSaveKey.addEventListener('click', () => {
-          const val = document.getElementById('input-api-key').value.trim();
+      // CENTER CARD: Cancel click
+      const btnCancelKey = document.getElementById('btn-cancel-key');
+      if (btnCancelKey) {
+        btnCancelKey.addEventListener('click', () => {
+          state.isEnteringKey = false;
+          render();
+        });
+      }
+
+      // SAVE KEY: From Center Card
+      const btnSaveKeyCenter = document.getElementById('btn-save-key-center');
+      if (btnSaveKeyCenter) {
+        btnSaveKeyCenter.addEventListener('click', () => {
+          const val = document.getElementById('input-api-key-center').value.trim();
+          if (val) {
+            state.apiKey = val;
+            localStorage.setItem('gemini_api_key', val);
+            state.isEnteringKey = false;
+            state.error = null;
+            render();
+          }
+        });
+      }
+
+      // SAVE KEY: From Header Dropdown
+      const btnSaveKeyHeader = document.getElementById('btn-save-key-header');
+      if (btnSaveKeyHeader) {
+        btnSaveKeyHeader.addEventListener('click', () => {
+          const val = document.getElementById('input-api-key-header').value.trim();
           if (val) {
             state.apiKey = val;
             localStorage.setItem('gemini_api_key', val);
             state.showKeyInput = false;
-            state.error = null; // Clear any previous errors about missing keys
+            state.error = null;
             render();
           }
         });
@@ -496,6 +552,7 @@ Output ONLY a JSON array of objects like:
       state.transcription = null;
       state.error = null;
       state.isProcessing = false;
+      // Do not reset apiKey
       render();
     }
 
@@ -508,7 +565,6 @@ Output ONLY a JSON array of objects like:
         return;
       }
 
-      // Magic Bytes Check
       try {
         const isValidSignature = await verifyMagicBytes(file);
         if (!isValidSignature) {
@@ -532,7 +588,7 @@ Output ONLY a JSON array of objects like:
 
       if (!state.apiKey) {
         state.error = "Please enter your API Key first.";
-        state.showKeyInput = true;
+        state.isEnteringKey = false;
         render();
         return;
       }
