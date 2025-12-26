@@ -498,24 +498,69 @@
         `;
       }
 
-      return `
-        <div class="flex flex-col items-center justify-center h-full p-4 md:p-6 transition-all duration-300">
-          <div id="drop-zone" class="w-full max-w-lg h-60 md:h-72 border-2 border-dashed border-gray-300 rounded-3xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200 group hover:border-indigo-400 hover:bg-white active:bg-gray-100 bg-gray-50/50">
-             <div class="absolute top-4 right-4 bg-indigo-100 text-indigo-700 text-xs px-2 py-1 rounded font-bold uppercase tracking-wide opacity-50">
-                 ${isGemini ? 'Google Gemini' : 'OpenAI'}
-             </div>
-            <div class="p-4 bg-indigo-100 text-indigo-600 rounded-full mb-4 group-hover:scale-110 transition-transform pointer-events-none shadow-sm">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-              </svg>
+      const aboutSection = `
+         <section class="mt-12 max-w-2xl mx-auto px-6 pb-8 text-center sm:text-left animate-pulse-once" style="animation-delay: 200ms">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Free & Secure AI Audio Transcription</h2>
+            
+            <div class="grid sm:grid-cols-2 gap-8 text-sm text-gray-600">
+               <div>
+                  <h3 class="font-semibold text-indigo-600 mb-2 flex items-center gap-2">
+                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                     100% Private (Local)
+                  </h3>
+                  <p>Your audio files never leave your browser for storage. We process them directly using Google Gemini or OpenAI APIs with zero middleman servers.</p>
+               </div>
+               
+               <div>
+                  <h3 class="font-semibold text-indigo-600 mb-2 flex items-center gap-2">
+                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                     Blazing Fast AI
+                  </h3>
+                  <p>Powered by **Gemini 2.0 Flash** and **GPT-4o**. Transcribe hour-long meetings, interviews, or lectures in mere seconds.</p>
+               </div>
+
+               <div>
+                  <h3 class="font-semibold text-indigo-600 mb-2 flex items-center gap-2">
+                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                     Multi-Speaker Chat
+                  </h3>
+                  <p>Automatically detects multiple speakers and formats the transcript into a readable **WhatsApp-style conversational view**.</p>
+               </div>
+
+               <div>
+                  <h3 class="font-semibold text-indigo-600 mb-2 flex items-center gap-2">
+                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                     Completely Free Tool
+                  </h3>
+                  <p>Use your own free tier API keys. No subscriptions, no hidden fees, and no monthly limits from us.</p>
+               </div>
             </div>
-            <h3 class="text-lg font-semibold text-gray-700 pointer-events-none">Upload Audio</h3>
-            <p class="text-gray-500 mt-2 text-sm text-center px-8 pointer-events-none">
-              Tap to browse or drag file<br>
-              <span class="text-xs text-indigo-400 mt-1 block">MP3, M4A, WAV supported</span>
-            </p>
-            <input id="file-input" type="file" class="hidden" accept="audio/*,video/*">
+            
+            <p class="text-xs text-gray-400 mt-8 text-center">Made with ❤️ by Sourav Kumar | Focused on Privacy & Speed</p>
+         </section>
+      `;
+
+      return `
+        <div class="flex flex-col h-full overflow-y-auto scrollbar-hide">
+          <div class="flex flex-col items-center justify-center p-4 md:p-6 transition-all duration-300 min-h-[60vh]">
+            <div id="drop-zone" class="w-full max-w-lg h-60 md:h-72 border-2 border-dashed border-gray-300 rounded-3xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200 group hover:border-indigo-400 hover:bg-white active:bg-gray-100 bg-gray-50/50">
+               <div class="absolute top-4 right-4 bg-indigo-100 text-indigo-700 text-xs px-2 py-1 rounded font-bold uppercase tracking-wide opacity-50">
+                   ${isGemini ? 'Google Gemini' : 'OpenAI'}
+               </div>
+              <div class="p-4 bg-indigo-100 text-indigo-600 rounded-full mb-4 group-hover:scale-110 transition-transform pointer-events-none shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-700 pointer-events-none">Upload Audio</h3>
+              <p class="text-gray-500 mt-2 text-sm text-center px-8 pointer-events-none">
+                Tap to browse or drag file<br>
+                <span class="text-xs text-indigo-400 mt-1 block">MP3, M4A, WAV supported</span>
+              </p>
+              <input id="file-input" type="file" class="hidden" accept="audio/*,video/*">
+            </div>
           </div>
+          ${aboutSection}
         </div>
       `;
     }
