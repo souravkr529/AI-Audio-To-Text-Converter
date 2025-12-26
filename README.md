@@ -1,50 +1,109 @@
-# AI Audio To Text Converter 🎙️
+# 🎙️ AI Audio To Text Converter
+### The Secure, Private, and Free Web-Based Transcriber
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Type: A.I. Tool](https://img.shields.io/badge/Type-AI_Tool-blue)
-![Platform: Web](https://img.shields.io/badge/Platform-Web-green)
+![Privacy: High](https://img.shields.io/badge/Privacy-Local_Only-green.svg)
+![AI Model: Gemini 2.0](https://img.shields.io/badge/AI_Model-Gemini_2.0_Flash-blueviolet.svg)
+![Platform: Web](https://img.shields.io/badge/Platform-Browser_Based-orange)
 
-**AI Audio To Text Converter** is a powerful web-based tool that instantly converts audio to text using Google's Gemini AI. 
-
-> 🟢 **No Server Required**: Run it essentially anywhere. 
-> 🔑 **Bring Your Own Key**: You enter your API Key in the browser. It is stored locally in your browser's memory and never sent to us.
+**AI Audio To Text Converter** is a next-generation transcription tool designed for **absolute privacy** and **zero latency**. Unlike other services that upload your audio to a third-party server, this tool runs entirely in your browser. It connects **directly** to Google's powerful Gemini AI using your own API key, ensuring your data never touches a middleman.
 
 ---
 
-## 🌟 Features
+## 🔒 Security Architecture: How Your Key & Data Are Safe
 
-*   **🗣️ Universal Transcription**: MP3, WAV, M4A, OGG supported.
-*   **🌍 Multi-Language**: English, Hindi, Spanish, etc.
-*   **🕵️ Privacy Focused**: Your API Key stays on your device (`Local Storage`).
-*   **👥 Speaker Detection**: Separates dialogue by speaker.
+We utilize a **Bring Your Own Key (BYOK)** architecture. This is the gold standard for privacy-conscious AI tools.
 
----
+### 🛡️ The "Zero-Server" Guarantee
+*   **No Database**: We have no database to store your audio or your keys.
+*   **No Backend**: There is no "server" sitting between you and Google.
+*   **Client-Side Storage**: Your API Key is saved strictly in your browser's `localStorage`. It persists on **your device only**.
+*   **Direct Tunnel**: When you transcribe, the request goes from `Your User Device` ➔ `Google Servers`. It cannot be intercepted by us.
 
-## 🚀 How to Use
-
-1.  **Open the App**: 
-    [Click here to view code](https://github.com/souravkr529/AI-Audio-To-Text-Converter) or download `voice.html`.
-2.  **Add Key**: 
-    Click the "No Key" indicator or "Enter API Key" button and paste your [Google Gemini API Key](https://aistudio.google.com/app/apikey).
-3.  **Upload**: 
-    Drag & drop your audio file.
-4.  **Transcribe**: 
-    Get your text instantly.
+### 🔐 Input Hardening
+We have implemented military-grade input validation:
+*   **Magic Bytes Detection**: Prevents malware from disguising itself as audio files.
+*   **Regex Validation**: Ensures only valid Google API Key formats (`AIza...`) are accepted.
+*   **XSS Sanitization**: All inputs and outputs are sanitized to prevent script injection attacks.
 
 ---
 
-## 🔐 Security (BYOK)
+## 🌊 Workflow Diagram
 
-This tool follows the **Bring Your Own Key (BYOK)** model.
-1.  **Input**: You input your key in the Settings menu.
-2.  **Storage**: It is saved to `localStorage` in your browser.
-3.  **Usage**: It is sent ONLY to `googleapis.com` for the transcription request.
+Here is how your data flows securely through the system:
 
-## 🛠️ Tech Stack
+```mermaid
+graph TD
+    subgraph Your_Device [🔒 Your Computer / Phone]
+        User[👤 You]
+        Browser[💻 Web Browser (Client Side)]
+        KeyStore[🔑 LocalStorage (Encrypted by Browser)]
+    end
 
-*   **Model**: Google Gemini 2.0 Flash
-*   **Frontend**: HTML5, TailwindCSS
+    subgraph Google_Cloud [☁️ Google AI Infrastructure]
+        Gemini[🧠 Gemini 2.0 Flash Model]
+    end
 
-## 📄 License
+    User -->|1. Enters API Key| Browser
+    Browser -->|Saves Key| KeyStore
+    User -->|2. Uploads Audio (MP3/WAV)| Browser
+    KeyStore -->|Injects Key locally| Browser
+    Browser -->|3. Secure Direct Request| Gemini
+    Gemini -->|4. Returns Transcript| Browser
+    Browser -->|5. Displays Text| User
 
-MIT License.
+    %% Styling
+    style Your_Device fill:#e0f2f1,stroke:#009688,stroke-width:2px
+    style Google_Cloud fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+```
+
+---
+
+## 🌟 Key Features
+
+*   **⚡ Blazing Fast**: Powered by Gemini 2.0 Flash, one of the fastest models in the world.
+*   **🗣️ Speaker Verification**: Automatically detects and separates different speakers (Speaker 1, Speaker 2).
+*   **🌍 Multilingual**: auto-detects and transcribes English, Hindi, Spanish, French, and 100+ others.
+*   **📱 Mobile Optimized**: A responsive UI that works perfectly on iOS, Android, and Desktop.
+*   **💸 100% Free to Use**: Since you use your own free Google Key, you pay nothing to us.
+
+---
+
+## 🚀 Quick Start Guide
+
+### Step 1: Get Your Free Key
+1.  Go to [Google AI Studio](https://aistudio.google.com/app/apikey).
+2.  Click **"Create API Key"**.
+3.  Copy the key (starts with `AIza...`).
+
+### Step 2: Use the Converter
+1.  Open the [Live Tool](https://souravkr529.github.io/AI-Audio-To-Text-Converter/voice.html) (or download `voice.html`).
+2.  Click **"Enter API Key"** and paste your key.
+3.  **Drag & Drop** your audio file.
+4.  Watch the AI convert it to text in seconds!
+
+---
+
+## 🛠️ Technical Stack
+
+*   **Frontend**: HTML5, Vanilla JavaScript (ES6+)
+*   **Styling**: TailwindCSS (CDN)
+*   **AI Engine**: Google Gemini API (REST)
+*   **Security**: Content Security Policy (CSP), Input Sanitization
+
+## 🙋‍♀️ FAQ
+
+**Q: Can you see my API Key?**
+A: **No.** Your key is stored in your browser's local cache. If you clear your browser history, the key is gone. We have no access to it.
+
+**Q: Is my audio uploaded to your server?**
+A: **No.** We do not have a server. The audio travels directly from your computer to Google for processing and then straight back to you.
+
+**Q: What audio formats are supported?**
+A: We support `MP3`, `WAV`, `M4A`, `OGG`, and standard `MP4` video files.
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License** - feel free to fork, modify, and use it in your own projects.
