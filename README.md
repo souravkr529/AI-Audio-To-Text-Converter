@@ -48,8 +48,8 @@ graph LR
     User -->|"1. Input Key"| Browser
     Browser -.->|"Save Key"| KeyStore
     User -->|"2. Upload Audio"| Browser
-    Browser ==>"3. Secure Direct Request"==> Gemini
-    Gemini ==>"4. Return Text"==> Browser
+    Browser ==>|"3. Secure Direct Request"| Gemini
+    Gemini ==>|"4. Return Text"| Browser
     Browser -->|"5. Display"| User
 ```
 
