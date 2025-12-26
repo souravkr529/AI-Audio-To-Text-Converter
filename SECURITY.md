@@ -15,4 +15,4 @@
 
 ## Reporting a Vulnerability
 
-If you discover a new security vulnerability, please email: security@example.com
+If you discover a new security vulnerability, please email: souravkr529@gmail.com
