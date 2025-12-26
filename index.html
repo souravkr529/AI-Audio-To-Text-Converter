@@ -99,6 +99,7 @@
   <div id="app" class="h-full flex flex-col items-center justify-start pt-safe pb-safe px-4 md:px-0"></div>
 
   <script>
+    "use strict";
     // =========================
     // CONFIG
     // =========================
@@ -695,8 +696,8 @@
                  
                  <!-- Footer (Sentiment/Lang) -->
                  <div class="mt-1.5 flex gap-1 justify-end opacity-80 scale-95 origin-right">
-                    ${item.sentiment ? `<span class="text-[9px] uppercase tracking-wider border border-current px-1 rounded opacity-70">${item.sentiment}</span>` : ''}
-                    ${item.language ? `<span class="text-[9px] uppercase tracking-wider font-bold opacity-50">${item.language}</span>` : ''}
+                    ${item.sentiment ? `<span class="text-[9px] uppercase tracking-wider border border-current px-1 rounded opacity-70">${escapeHtml(item.sentiment)}</span>` : ''}
+                    ${item.language ? `<span class="text-[9px] uppercase tracking-wider font-bold opacity-50">${escapeHtml(item.language)}</span>` : ''}
                  </div>
                </div>
              </div>
