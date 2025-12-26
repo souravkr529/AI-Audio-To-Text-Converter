@@ -393,7 +393,7 @@
                 </svg>
               </button>
 
-              <div id="key-dropdown" class="${keyInputClass} absolute right-0 top-full mt-3 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 p-5 z-50 text-gray-800 ring-1 ring-black/5 transform origin-top-right transition-all">
+              <div id="key-dropdown" class="${keyInputClass} absolute right-0 top-full mt-3 w-[92vw] max-w-xs sm:w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 p-5 z-50 text-gray-800 ring-1 ring-black/5 transform origin-top-right transition-all">
                  <div class="flex items-center gap-2 mb-3">
                     <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" /></svg>
@@ -407,7 +407,7 @@
                  <div class="relative">
                     <input type="password" id="input-api-key-header" value="${escapeHtml(activeKey)}" 
                         placeholder="${keyPlaceholder}" 
-                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none font-mono text-gray-700 transition shadow-inner">
+                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-base focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none font-mono text-gray-700 transition shadow-inner">
                  </div>
                  
                  <button id="btn-save-key-header" class="w-full mt-3 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-sm font-bold py-3 rounded-xl transition shadow-lg shadow-indigo-200">
