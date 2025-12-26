@@ -33,28 +33,24 @@ We have implemented military-grade input validation:
 Here is how your data flows securely through the system:
 
 ```mermaid
-graph TD
-    subgraph Your_Device ["🔒 Your Computer / Phone"]
-        User["👤 You"]
-        Browser["💻 Web Browser (Client Side)"]
-        KeyStore["🔑 LocalStorage (Encrypted)"]
+graph LR
+    User((👤 You))
+    
+    subgraph Browser_Safe_Zone ["🔒 Secure Browser Environment"]
+        Browser[("💻 Web App")]
+        KeyStore[["🔑 LocalStorage"]]
     end
 
-    subgraph Google_Cloud ["☁️ Google AI Infrastructure"]
-        Gemini["🧠 Gemini 2.0 Flash Model"]
+    subgraph Google ["☁️ Google Cloud"]
+        Gemini[/"🧠 Gemini AI"\]
     end
 
-    User -->|"1. Enters API Key"| Browser
-    Browser -->|"Saves Key"| KeyStore
-    User -->|"2. Uploads Audio (MP3/WAV)"| Browser
-    KeyStore -->|"Injects Key locally"| Browser
-    Browser -->|"3. Secure Direct Request"| Gemini
-    Gemini -->|"4. Returns Transcript"| Browser
-    Browser -->|"5. Displays Text"| User
-
-    %% Styling
-    style Your_Device fill:#e0f2f1,stroke:#009688,stroke-width:2px
-    style Google_Cloud fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    User -->|"1. Input Key"| Browser
+    Browser -.->|"Save Key"| KeyStore
+    User -->|"2. Upload Audio"| Browser
+    Browser ==>"3. Secure Direct Request"==> Gemini
+    Gemini ==>"4. Return Text"==> Browser
+    Browser -->|"5. Display"| User
 ```
 
 ---
