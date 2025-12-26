@@ -44,13 +44,13 @@ graph TD
         Gemini["🧠 Gemini 2.0 Flash Model"]
     end
 
-    User -->|1. Enters API Key| Browser
-    Browser -->|Saves Key| KeyStore
-    User -->|2. Uploads Audio (MP3/WAV)| Browser
-    KeyStore -->|Injects Key locally| Browser
-    Browser -->|3. Secure Direct Request| Gemini
-    Gemini -->|4. Returns Transcript| Browser
-    Browser -->|5. Displays Text| User
+    User -->|"1. Enters API Key"| Browser
+    Browser -->|"Saves Key"| KeyStore
+    User -->|"2. Uploads Audio (MP3/WAV)"| Browser
+    KeyStore -->|"Injects Key locally"| Browser
+    Browser -->|"3. Secure Direct Request"| Gemini
+    Gemini -->|"4. Returns Transcript"| Browser
+    Browser -->|"5. Displays Text"| User
 
     %% Styling
     style Your_Device fill:#e0f2f1,stroke:#009688,stroke-width:2px
