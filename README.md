@@ -62,9 +62,9 @@ graph TD
     end
     
     Browser == "4. Sends Encrypted Audio (Direct)" ==> AI_Service
-    AI_Service -- "5. Returns JSON Transcript" ==> Browser
+    AI_Service == "5. Returns JSON Transcript" ==> Browser
     
-    Browser -- "6. Renders Chat/Document UI" --> User
+    Browser -- "6. Renders Chat & Document UI" --> User
 ```
 
 ---
