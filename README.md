@@ -77,7 +77,7 @@ graph TD
 3.  Copy the key (starts with `AIza...`).
 
 ### Step 2: Use the Converter
-1.  Open the [Live Tool](https://souravkr529.github.io/AI-Audio-To-Text-Converter/voice.html) (or download `voice.html`).
+1.  Open the [Live Tool](https://souravkr529.github.io/AI-Audio-To-Text-Converter/).
 2.  Click **"Enter API Key"** and paste your key.
 3.  **Drag & Drop** your audio file.
 4.  Watch the AI convert it to text in seconds!
@@ -101,6 +101,9 @@ A: **No.** We do not have a server. The audio travels directly from your compute
 
 **Q: What audio formats are supported?**
 A: We support `MP3`, `WAV`, `M4A`, `OGG`, and standard `MP4` video files.
+
+**Q: Contact?**
+A: security/inquiries: `souravkr529@gmail.com`
 
 ---
 
