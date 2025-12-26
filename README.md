@@ -34,14 +34,14 @@ Here is how your data flows securely through the system:
 
 ```mermaid
 graph TD
-    subgraph Your_Device [🔒 Your Computer / Phone]
-        User[👤 You]
-        Browser[💻 Web Browser (Client Side)]
-        KeyStore[🔑 LocalStorage (Encrypted by Browser)]
+    subgraph Your_Device ["🔒 Your Computer / Phone"]
+        User["👤 You"]
+        Browser["💻 Web Browser (Client Side)"]
+        KeyStore["🔑 LocalStorage (Encrypted)"]
     end
 
-    subgraph Google_Cloud [☁️ Google AI Infrastructure]
-        Gemini[🧠 Gemini 2.0 Flash Model]
+    subgraph Google_Cloud ["☁️ Google AI Infrastructure"]
+        Gemini["🧠 Gemini 2.0 Flash Model"]
     end
 
     User -->|1. Enters API Key| Browser
